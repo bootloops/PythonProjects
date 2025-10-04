@@ -1,0 +1,42 @@
+import time
+import subprocess
+from PIL import Image, ImageSequence
+
+GIF_PATH = "/home/bootloops/wp5.gif"  # default wallpaper GIF
+
+def detect_monitors():
+    result = subprocess.run(['xrandr', '--listmonitors'], stdout=subprocess.PIPE, text=True)
+    monitors = []
+    for line in result.stdout.splitlines()[1:]:
+        parts = line.split()
+        if len(parts) >= 4:
+            monitors.append(parts[2])
+    return monitors
+
+def load_frames(gif_path):
+    frames = []
+    img = Image.open(gif_path)
+    i = 0
+    while True:
+        try:
+            img.seek(i)
+            frame = img.convert("RGBA").copy()
+            frames.append(frame)
+            i += 1
+        except EOFError:
+            break
+    return frames
+
+def main():
+    frames = load_frames(GIF_PATH)
+    monitors = detect_monitors()
+    while True:
+        for frame in frames:
+            frame_path = "/tmp/frame.png"
+            frame.save(frame_path)
+            for mon in monitors:
+                subprocess.run(["feh", "--bg-scale", frame_path])
+            time.sleep(0.05)  # default speed
+
+if __name__ == "__main__":
+    main()
