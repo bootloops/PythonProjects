@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-
 #=====================================================
-#============= Storage Analyzer v4 ===================
-#
-#
+#============= Python Disk Usage v0.1 ================
+#   Analyze storage devices for large files
+#   Visually shows which files are using more space
 #=====================================================
 
-# pydu_live.py — multithreaded ncdu-like TUI with live scan
 import os
 import sys
 import time
